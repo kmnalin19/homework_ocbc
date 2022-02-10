@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Homework">
         <activity
+            android:name=".TransactionActivity"
+            android:exported="true" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
@@ -19,5 +22,7 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

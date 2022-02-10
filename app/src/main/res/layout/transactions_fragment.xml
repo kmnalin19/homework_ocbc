@@ -6,8 +6,23 @@
     tools:context=".ui.TransactionsFragment">
 
     <TextView
+        android:id="@+id/logout_btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:gravity="end"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="16dp"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:fontFamily="sans-serif-black"
+        android:text="Logout" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone" />
 
 </FrameLayout>

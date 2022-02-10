@@ -4,21 +4,101 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.app.homework.R
+import com.app.homework.listners.UiEventInterface
+import com.app.homework.util.hideKeyboard
 import com.app.homework.viewModel.SignUpViewModel
 
-class SignUpFragment : Fragment() {
+class SignUpFragment : Fragment(), UiEventInterface {
+
+    private val signUpViewModel: SignUpViewModel by viewModels()
+    private var progressBar : ProgressBar? = null
+
+    private var userNameEdtText : EditText? = null
+    private var passwordEdtText : EditText? = null
+    private var confPasswordEdtText : EditText? = null
 
     companion object {
         fun newInstance() = SignUpFragment()
     }
 
-    private lateinit var viewModel: SignUpViewModel
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.sign_up_fragment_layout, container, false)
-        return rootView
+        return inflater.inflate(R.layout.sign_up_fragment_layout, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpUi(view)
+        initLiveData()
+    }
+
+    override fun setUpUi(view: View) {
+
+        progressBar = view.findViewById(R.id.loading)
+        val titleImage : ImageView = view.findViewById(R.id.title_image)
+        val titleText : TextView = view.findViewById(R.id.title_text)
+
+
+         userNameEdtText  = view.findViewById(R.id.username_edtxt)
+         passwordEdtText  = view.findViewById(R.id.password_edtxt)
+         confPasswordEdtText  = view.findViewById(R.id.conform_password_edtxt)
+        val registerBtn : AppCompatButton = view.findViewById(R.id.register_btn)
+
+        registerBtn.setOnClickListener {
+            activity?.hideKeyboard(it)
+
+            val userName = userNameEdtText?.text.toString()
+            val password = passwordEdtText?.text.toString()
+            val confPassword = confPasswordEdtText?.text.toString()
+
+            if (userName.isNotBlank() && password.isNotBlank() && confPassword.isNotBlank()) {
+                if (password == confPassword) {
+                    signUpViewModel.doSignUp(userName,password)
+                    cleanText()
+                }
+                else{
+                    confPasswordEdtText?.error = "Confirm Password not match"
+                }
+            }
+            else{
+                if (userName.isBlank())
+                    userNameEdtText?.error = getString(R.string.enter_user_name)
+                else
+                    passwordEdtText?.error = getString(R.string.enter_password)
+            }
+        }
+
+        titleText.setText(R.string.sign_up)
+        titleImage.visibility = View.VISIBLE
+        titleImage.setOnClickListener {
+            activity?.onBackPressed()
+        }
+    }
+
+    override fun initLiveData() {
+        signUpViewModel.isError.observe(viewLifecycleOwner , Observer {
+            //cleanText()
+            Toast.makeText(activity,R.string.invalid_username, Toast.LENGTH_LONG).show()
+        })
+        signUpViewModel.isLoading.observe(viewLifecycleOwner , Observer {
+            if (it == false)
+                progressBar?.visibility = View.GONE
+        })
+        signUpViewModel.isSignUpSuccess.observe(viewLifecycleOwner , Observer {
+            Toast.makeText(activity,"Please Login", Toast.LENGTH_LONG).show()
+            activity?.onBackPressed()
+        })
+    }
+
+    private fun cleanText(){
+        userNameEdtText?.text?.clear()
+        passwordEdtText?.text?.clear()
+        confPasswordEdtText?.text?.clear()
     }
 }

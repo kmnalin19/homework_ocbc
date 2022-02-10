@@ -1,5 +1,9 @@
 package com.app.homework.util
 
+import android.app.Activity
+import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.app.homework.R
@@ -11,7 +15,12 @@ import com.app.homework.R
  */
 internal fun AppCompatActivity.addFragment(fragment : Fragment){
     val transaction = supportFragmentManager.beginTransaction()
-    transaction.replace(R.id.container, fragment, "CollectDetailPageFragment")
+    transaction.replace(R.id.container, fragment, "addFragment")
     transaction.addToBackStack(null)
     transaction.commit()
+}
+
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
