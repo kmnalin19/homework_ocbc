@@ -7,10 +7,15 @@ Kotlin
 functions Implimented 
 
 Project runs as expected without crashing - WORKING
+
 User is able to register  - WORKING
+
 User is able to login - WORKING
+
 User is able to view the balances / transactions history in the account - WORKING
+
 User is able to make transfer to a receipient - PENDING
+
 Project is covered by unit test. - PENDING
 
 
