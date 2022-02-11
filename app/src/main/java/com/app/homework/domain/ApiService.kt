@@ -4,10 +4,7 @@ import com.app.homework.domain.model.*
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiService {
 
@@ -18,7 +15,10 @@ interface ApiService {
     @POST("register")
     suspend fun doSignUp(@Body signUpRequest : SignUpRequest) : Response<SignUpResponse>
 
-    @POST("transactions")
+    @GET("balance")
+    suspend fun getAccountBalance(@Header("Authorization") authorization : String) : Response<BalanceResponseModel>
+
+    @GET("transactions")
     suspend fun getTransactions(@Header("Authorization") authorization : String) : Response<TransactionResponse>
 
     companion object {

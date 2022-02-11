@@ -37,6 +37,7 @@ class LoginActivity : AppCompatActivity(),UiEventInterface {
 
             val i = Intent(this, TransactionActivity::class.java)
             i.putExtra(ApplicationConst.TOKEN_STRING, it.token)
+            i.putExtra(ApplicationConst.HOLDER_NAME, it.username)
             startActivity(i)
         })
     }

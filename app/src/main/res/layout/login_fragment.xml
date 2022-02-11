@@ -36,12 +36,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
+        android:background="@color/color_blue"
+        android:textColor="@color/white"
         android:text="@string/login"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/register_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:textColor="@color/color_blue"
         android:layout_gravity="start"
         android:text="@string/sign_up"/>
 

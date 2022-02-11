@@ -1,25 +1,35 @@
 package com.app.homework.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.app.homework.domain.ApiService
 import com.app.homework.domain.MainRepository
-import com.app.homework.domain.model.LoginRequest
-import com.app.homework.domain.model.LoginResponse
-import com.app.homework.domain.model.TransactionResponse
+import com.app.homework.domain.model.*
+import com.app.homework.ui.model.TransactionRecyclerItem
+import com.app.homework.util.FormatUtil
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TransactionsViewModel : ViewModel() {
 
-    private var jwtToken : String? = null
+    private var jwtToken : String = ""
+    private var accountHolderName : String = ""
 
     private val apiService: ApiService = ApiService.getInstance()
     private val mainRepository: MainRepository = MainRepository(apiService)
 
-    private val _isTransactionSuccess : MutableLiveData<TransactionResponse> = MutableLiveData()
-    val isTransactionSuccess : LiveData<TransactionResponse>
+    private val _isTransactionSuccess : MutableLiveData<ArrayList<TransactionRecyclerItem>> = MutableLiveData()
+    val isTransactionSuccess : LiveData<ArrayList<TransactionRecyclerItem>>
         get() = _isTransactionSuccess
+
+
+    private val _isAccountBalanceSuccess : MutableLiveData<BalanceResponseModel> = MutableLiveData()
+    val isAccountBalanceSuccess : LiveData<BalanceResponseModel>
+        get() = _isAccountBalanceSuccess
 
     private val _isError : MutableLiveData<String> = MutableLiveData()
     val isError : LiveData<String>
@@ -34,12 +44,14 @@ class TransactionsViewModel : ViewModel() {
         onError("Exception handled: ${throwable.localizedMessage}")
     }
 
-    fun getTransactions(token : String) {
+    fun getTransactions() {
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            val response = mainRepository.getTransactions(token)
+            val response = mainRepository.getTransactions(jwtToken)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    _isTransactionSuccess.postValue(response.body())
+                    response.body()?.let {
+                        _isTransactionSuccess.postValue(getTransactionList(it.data))
+                    }
                     _isLoading.postValue(false)
                 } else {
                     _isError.postValue(response.message())
@@ -49,6 +61,46 @@ class TransactionsViewModel : ViewModel() {
         }
     }
 
+    fun getAccountBalance() {
+        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+            val response = mainRepository.getAccountBalance(jwtToken)
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    _isAccountBalanceSuccess.postValue(response.body())
+                    _isLoading.postValue(false)
+                } else {
+                    _isError.postValue(response.message())
+                    _isLoading.postValue(false)
+                }
+            }
+        }
+    }
+
+    private fun getTransactionList(data : List<TransactionList>) : ArrayList<TransactionRecyclerItem>{
+
+        val transactionList : ArrayList<TransactionRecyclerItem> = arrayListOf()
+        var currentDate = data[0].transactionDate.split("T")[0]
+        var newDate  = currentDate
+        transactionList.add(TransactionRecyclerItem.TransactionRecyclerTitle(FormatUtil.getDisplayDateString(currentDate)))
+        transactionList.add(TransactionRecyclerItem.TransactionRecyclerRow(
+            data[0].receipient.accountHolder,
+            data[0].receipient.accountNo,data[0].amount))
+
+        for (i in 2 until data.size){
+            newDate = data[i].transactionDate.split("T")[0]
+            if (newDate != currentDate) {
+                currentDate = newDate
+                transactionList.add(
+                    TransactionRecyclerItem.TransactionRecyclerTitle(FormatUtil.getDisplayDateString(currentDate)))
+            }
+                transactionList.add(TransactionRecyclerItem.TransactionRecyclerRow(
+                    data[i].receipient.accountHolder,
+                    data[i].receipient.accountNo,data[i].amount))
+
+        }
+        return transactionList
+    }
+
     private fun onError(message: String) {
         _isError.postValue(message)
     }
@@ -56,6 +108,12 @@ class TransactionsViewModel : ViewModel() {
     fun setJwtToken(token : String){
         jwtToken = token
     }
+
+    fun setAccountHolderName(name : String){
+        accountHolderName = name
+    }
+
+    fun getAccountHolderName() = accountHolderName
 
     override fun onCleared() {
         super.onCleared()
