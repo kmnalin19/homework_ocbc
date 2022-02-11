@@ -26,7 +26,5 @@ class TransactionActivity : AppCompatActivity() {
         addFragment(TransactionsFragment.newInstance())
     }
 
-    override fun onBackPressed() {
-
-    }
+    override fun onBackPressed() {}
 }

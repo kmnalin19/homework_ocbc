@@ -16,25 +16,40 @@ import kotlin.collections.ArrayList
 
 class TransactionsViewModel : ViewModel() {
 
+    /**
+     * keep token in view model, better encrypt and keep in local repo and
+     */
     private var jwtToken : String = ""
     private var accountHolderName : String = ""
 
     private val apiService: ApiService = ApiService.getInstance()
     private val mainRepository: MainRepository = MainRepository(apiService)
 
+
+    /**
+     * live data for notify after when Transaction list api success
+     */
     private val _isTransactionSuccess : MutableLiveData<ArrayList<TransactionRecyclerItem>> = MutableLiveData()
     val isTransactionSuccess : LiveData<ArrayList<TransactionRecyclerItem>>
         get() = _isTransactionSuccess
 
 
+    /**
+     * live data for notify after when Account details list api success
+     */
     private val _isAccountBalanceSuccess : MutableLiveData<BalanceResponseModel> = MutableLiveData()
     val isAccountBalanceSuccess : LiveData<BalanceResponseModel>
         get() = _isAccountBalanceSuccess
 
+    /**
+     * live data for notify when Error and handle in UI Fragment or Activity
+     */
     private val _isError : MutableLiveData<String> = MutableLiveData()
     val isError : LiveData<String>
         get() = _isError
-
+    /**
+     * live data for handle Loading and notify for UI
+     */
     private val _isLoading : MutableLiveData<Boolean> = MutableLiveData()
     val isLoading : LiveData<Boolean>
         get() = _isLoading
@@ -44,6 +59,9 @@ class TransactionsViewModel : ViewModel() {
         onError("Exception handled: ${throwable.localizedMessage}")
     }
 
+    /**
+     * call Transaction list api and handle isSuccessful and error (can move to UseCase from viewmodel if want to extend to clean architecture )
+     */
     fun getTransactions() {
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             val response = mainRepository.getTransactions(jwtToken)
@@ -61,6 +79,9 @@ class TransactionsViewModel : ViewModel() {
         }
     }
 
+    /**
+     * call account detail api and handle isSuccessful and error (can move to UseCase from viewmodel if want to extend to clean architecture )
+     */
     fun getAccountBalance() {
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             val response = mainRepository.getAccountBalance(jwtToken)
@@ -76,6 +97,10 @@ class TransactionsViewModel : ViewModel() {
         }
     }
 
+    /**
+     * prepare TransactionRecyclerItems section list UI model for adapter
+     * group from transaction date
+     */
     private fun getTransactionList(data : List<TransactionList>) : ArrayList<TransactionRecyclerItem>{
 
         val transactionList : ArrayList<TransactionRecyclerItem> = arrayListOf()
@@ -115,6 +140,9 @@ class TransactionsViewModel : ViewModel() {
 
     fun getAccountHolderName() = accountHolderName
 
+    /**
+     * clear job and token
+     */
     override fun onCleared() {
         super.onCleared()
         job?.cancel()

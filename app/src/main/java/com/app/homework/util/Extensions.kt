@@ -20,6 +20,9 @@ internal fun AppCompatActivity.addFragment(fragment : Fragment){
     transaction.commit()
 }
 
+/**
+ * Context extension function for hideKeyboard
+ */
 fun Context.hideKeyboard(view: View) {
     val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)

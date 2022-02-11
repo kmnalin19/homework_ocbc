@@ -28,15 +28,24 @@ class LoginViewModel() : ViewModel() {
     val isLoginSuccess : LiveData<LoginResponse>
         get() = _isLoginSuccess
 
+    /**
+     * live data for notify when Error and handle in UI Fragment or Activity
+     */
     private val _isError : MutableLiveData<String> = MutableLiveData()
     val isError : LiveData<String>
         get() = _isError
 
 
+    /**
+     * live data for handle Loading and notify for UI
+     */
     private val _isLoading : MutableLiveData<Boolean> = MutableLiveData()
     val isLoading : LiveData<Boolean>
         get() = _isLoading
 
+    /**
+     * setRegister will for listen user navigate to Signup
+     */
     fun setRegister(){
         _isRegister.postValue(true)
     }
@@ -46,6 +55,9 @@ class LoginViewModel() : ViewModel() {
         onError("Exception handled: ${throwable.localizedMessage}")
     }
 
+    /**
+     * call login api and handle isSuccessful and error (can move to UseCase from viewmodel if want to extend to clean architecture )
+     */
     fun doLogin(userName : String,password : String) {
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             val response = mainRepository.doLogin(LoginRequest(userName,password))

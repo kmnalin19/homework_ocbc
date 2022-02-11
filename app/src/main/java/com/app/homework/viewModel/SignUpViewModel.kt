@@ -18,17 +18,22 @@ class SignUpViewModel : ViewModel() {
     private val mainRepository: MainRepository = MainRepository(apiService)
 
     /**
-     * live data for notify after when redirect to Login screen anywhere in the app
+     * live data for notify after when redirect to SignUp screen anywhere in the app
      */
     private val _isSignUpSuccess : MutableLiveData<SignUpResponse> = MutableLiveData()
     val isSignUpSuccess : LiveData<SignUpResponse>
         get() = _isSignUpSuccess
 
+    /**
+     * live data for notify when Error and handle in UI Fragment or Activity
+     */
     private val _isError : MutableLiveData<String> = MutableLiveData()
     val isError : LiveData<String>
         get() = _isError
 
-
+    /**
+     * live data for handle Loading and notify for UI
+     */
     private val _isLoading : MutableLiveData<Boolean> = MutableLiveData()
     val isLoading : LiveData<Boolean>
         get() = _isLoading
@@ -38,6 +43,9 @@ class SignUpViewModel : ViewModel() {
         onError("Exception handled: ${throwable.localizedMessage}")
     }
 
+    /**
+     * call signup api and handle isSuccessful and error (can move to UseCase from viewmodel if want to extend to clean architecture )
+     */
     fun doSignUp(userName : String,password : String) {
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             val response = mainRepository.doSignUp(SignUpRequest(userName,password))

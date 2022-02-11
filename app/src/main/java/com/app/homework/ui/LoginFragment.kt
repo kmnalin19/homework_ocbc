@@ -17,6 +17,9 @@ import com.app.homework.listners.UiEventInterface
 import com.app.homework.util.hideKeyboard
 import com.app.homework.viewModel.LoginViewModel
 
+/**
+ * login View extend UiEventInterface for override UI functions
+ */
 class LoginFragment : Fragment(),UiEventInterface {
 
     private val loginViewModel: LoginViewModel by activityViewModels()
@@ -28,10 +31,7 @@ class LoginFragment : Fragment(),UiEventInterface {
         fun newInstance() = LoginFragment()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.login_fragment, container, false)
     }
 
@@ -75,11 +75,17 @@ class LoginFragment : Fragment(),UiEventInterface {
     }
 
     override fun initLiveData() {
+        /**
+         * for error show generic error msg and clear fields
+         */
         loginViewModel.isError.observe(viewLifecycleOwner , Observer {
             userNameEdtText?.text?.clear()
             passwordEdtText?.text?.clear()
             Toast.makeText(activity,R.string.invalid_username,Toast.LENGTH_LONG).show()
         })
+        /**
+         * progressBar hide for false
+         */
         loginViewModel.isLoading.observe(viewLifecycleOwner , Observer {
             if (it == false)
                 progressBar?.visibility = View.GONE
