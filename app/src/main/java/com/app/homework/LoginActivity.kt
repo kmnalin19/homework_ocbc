@@ -1,5 +1,6 @@
 package com.app.homework
 
+import android.app.FragmentManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -39,8 +40,18 @@ class LoginActivity : AppCompatActivity(),UiEventInterface {
             i.putExtra(ApplicationConst.TOKEN_STRING, it.token)
             i.putExtra(ApplicationConst.HOLDER_NAME, it.username)
             startActivity(i)
+            finish()
         })
     }
 
+    override fun onBackPressed() {
+        val fragmentManager = supportFragmentManager
 
+        val fragments = fragmentManager.backStackEntryCount
+        if (fragments > 1) {
+            super.onBackPressed()
+        }
+        else
+            finish()
+    }
 }

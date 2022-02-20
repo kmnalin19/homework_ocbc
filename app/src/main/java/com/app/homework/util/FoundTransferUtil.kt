@@ -15,10 +15,13 @@ object FoundTransferUtil {
         val transactionList : ArrayList<TransactionRecyclerItem> = arrayListOf()
         var currentDate = data[0].transactionDate.split("T")[0]
         var newDate  = currentDate
-        transactionList.add(TransactionRecyclerItem.TransactionRecyclerTitle(FormatUtil.getDisplayDateString(currentDate)))
-        transactionList.add(TransactionRecyclerItem.TransactionRecyclerRow(
-            data[0].receipient.accountHolder,
-            data[0].receipient.accountNo,data[0].amount))
+
+        data[0].receipient?.let {
+            transactionList.add(TransactionRecyclerItem.TransactionRecyclerTitle(FormatUtil.getDisplayDateString(currentDate)))
+            transactionList.add(TransactionRecyclerItem.TransactionRecyclerRow(
+                it.accountHolder,
+                it.accountNo, data[0].amount))
+        }
 
         for (i in 2 until data.size){
             newDate = data[i].transactionDate.split("T")[0]
@@ -27,10 +30,11 @@ object FoundTransferUtil {
                 transactionList.add(
                     TransactionRecyclerItem.TransactionRecyclerTitle(FormatUtil.getDisplayDateString(currentDate)))
             }
-            transactionList.add(TransactionRecyclerItem.TransactionRecyclerRow(
-                data[i].receipient.accountHolder,
-                data[i].receipient.accountNo,data[i].amount))
-
+            data[i].receipient?.let {
+                transactionList.add(TransactionRecyclerItem.TransactionRecyclerRow(
+                    it.accountHolder,
+                    it.accountNo,data[i].amount))
+            }
         }
         return transactionList
     }

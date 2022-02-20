@@ -37,4 +37,16 @@ class TransactionActivity : AppCompatActivity(),UiEventInterface {
             addFragment(TransferFoundFragment.newInstance())
         })
     }
+
+
+    override fun onBackPressed() {
+        val fragmentManager = supportFragmentManager
+
+        val fragments = fragmentManager.backStackEntryCount
+        if (fragments > 1) {
+            super.onBackPressed()
+        }
+        else
+            finish()
+    }
 }

@@ -6,8 +6,6 @@
     <string name="sign_up">REGISTER</string>
     <string name="login">LOGIN</string>
     <string name="welcome">"Welcome!"</string>
-    <string name="enter_user_name">Enter User Name</string>
-    <string name="enter_password">Enter Password</string>
     <string name="user_name">user name</string>
     <string name="password">password</string>
     <string name="conform_password">conform password</string>
@@ -18,6 +16,7 @@
     <string name="transfer_title">Transfer</string>
     <string name="description_hint">description....</string>
     <string name="amount_hint">Amount</string>
+    <string name="confirm_password_not_match">Confirm Password not match</string>
 
     <string name="amount_insufficient_error">Insufficient balance</string>
     <string name="amount_validation_error">Please enter valid amount</string>

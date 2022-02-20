@@ -1,6 +1,8 @@
 package com.app.homework.ui
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +25,7 @@ class LoginFragment : Fragment(),UiEventInterface {
     private var userNameEdtText : EditText? = null
     private var passwordEdtText : EditText? = null
     private var progressBar : ProgressBar? = null
+    private var loginBtn : AppCompatButton? = null
 
     companion object {
         fun newInstance() = LoginFragment()
@@ -44,18 +47,24 @@ class LoginFragment : Fragment(),UiEventInterface {
     override fun setUpUi(view : View) {
 
         val registerBtn : AppCompatButton = view.findViewById(R.id.register_btn)
-        val loginBtn : AppCompatButton = view.findViewById(R.id.login_btn)
+        loginBtn = view.findViewById(R.id.login_btn)
         userNameEdtText = view.findViewById(R.id.username_edtxt)
         passwordEdtText = view.findViewById(R.id.password_edtxt)
         progressBar = view.findViewById(R.id.loading)
-        userNameEdtText?.setText("test")
-        passwordEdtText?.setText("asdasd")
+//        userNameEdtText?.setText("test")
+//        passwordEdtText?.setText("asdasd")
+        userNameEdtText?.setText("nalin1")
+        passwordEdtText?.setText("nalin123")
 
+        userNameEdtText?.addTextChangedListener(textWatcher)
+        passwordEdtText?.addTextChangedListener(textWatcher)
+
+        loginBtn?.disableButton()
         registerBtn.setOnClickListener {
             activity?.hideKeyboard(it)
             loginViewModel.setRegister()
         }
-        loginBtn.setOnClickListener {
+        loginBtn?.setOnClickListener {
             activity?.hideKeyboard(it)
             val userName = userNameEdtText?.text.toString()
             val password = passwordEdtText?.text.toString()
@@ -67,12 +76,22 @@ class LoginFragment : Fragment(),UiEventInterface {
                 passwordEdtText?.text?.clear()
                 loginViewModel.doLogin(userName, password)
             }
-            else{
-                if (userName.isBlank())
-                    userNameEdtText?.error = getString(R.string.enter_user_name)
-                else
-                    passwordEdtText?.error = getString(R.string.enter_password)
+        }
+    }
+
+    private val textWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            if (userNameEdtText?.text.toString().isNotBlank()
+                && passwordEdtText?.text.toString().isNotBlank()){
+                loginBtn?.enableButton()
             }
+            else
+                loginBtn?.disableButton()
         }
     }
 

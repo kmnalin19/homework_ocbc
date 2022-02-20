@@ -15,6 +15,8 @@ import com.app.homework.listners.UiEventInterface
 import com.app.homework.viewModel.TransactionsViewModel
 
 import com.app.homework.ui.custom.ThousandSeparatorTextWatcher
+import com.app.homework.ui.disableButton
+import com.app.homework.ui.enableButton
 import com.app.homework.ui.model.PayeeUiModel
 import com.app.homework.viewModel.FundTransferViewModel
 
@@ -30,6 +32,7 @@ class TransferFoundFragment : Fragment(), UiEventInterface,ThousandSeparatorText
     private lateinit var amountEdtText : EditText
     private lateinit var  descEdtText : EditText
     private lateinit var  payeeSpinner : Spinner
+    private lateinit var registerBtn : AppCompatButton
 
     companion object {
         fun newInstance() = TransferFoundFragment()
@@ -57,8 +60,9 @@ class TransferFoundFragment : Fragment(), UiEventInterface,ThousandSeparatorText
         val titleImage : ImageView = view.findViewById(R.id.title_image)
         val titleText : TextView = view.findViewById(R.id.title_text)
         payeeSpinner  = view.findViewById(R.id.found_transfer_payee_list_spinner)
-        val registerBtn : AppCompatButton  = view.findViewById(R.id.register_btn)
+        registerBtn = view.findViewById(R.id.register_btn)
 
+        registerBtn.disableButton()
         amountEdtText = view.findViewById(R.id.found_transfer_amount_edtxt)
         descEdtText = view.findViewById(R.id.found_transfer_desc_edtxt)
         amountEdtText.addTextChangedListener(ThousandSeparatorTextWatcher(amountEdtText,transactionsViewModel.accountBalance(),this))
@@ -105,12 +109,18 @@ class TransferFoundFragment : Fragment(), UiEventInterface,ThousandSeparatorText
     }
 
     override fun showInputError() {
+        registerBtn.disableButton()
         amountEdtText.error = getString(R.string.amount_insufficient_error)
     }
 
     override fun showInvalidInputError() {
+        registerBtn.disableButton()
         Toast.makeText(activity,getString(R.string.amount_validation_error),Toast.LENGTH_LONG).show()
         amountEdtText.setText("")
         amountEdtText.hint = "0.00"
+    }
+
+    override fun showTransferButton() {
+        registerBtn.enableButton()
     }
 }

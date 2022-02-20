@@ -16,7 +16,7 @@ import com.app.homework.R
 internal fun AppCompatActivity.addFragment(fragment : Fragment){
     val transaction = supportFragmentManager.beginTransaction()
     transaction.replace(R.id.container, fragment, "addFragment")
-    transaction.addToBackStack(null)
+    transaction.addToBackStack(fragment.tag)
     transaction.commit()
 }
 

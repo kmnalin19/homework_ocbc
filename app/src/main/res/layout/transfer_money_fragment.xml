@@ -19,35 +19,23 @@
 
         <Spinner
             android:id="@+id/found_transfer_payee_list_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/backwithborder"
-            android:layout_marginBottom="4dp"
-            android:padding="@dimen/activity_horizontal_margin"/>
+            style="@style/edittext_style1"/>
 
         <EditText
             android:id="@+id/found_transfer_amount_edtxt"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="16dp"
+            style="@style/edittext_style1"
             android:hint="@string/amount_hint"
-            android:background="@drawable/backwithborder"
             android:selectAllOnFocus="true"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="4dp"
             android:inputType="numberDecimal"
             app:layout_constraintTop_toBottomOf="@+id/found_transfer_payee_list_spinner" />
 
         <EditText
             android:id="@+id/found_transfer_desc_edtxt"
-            android:layout_width="match_parent"
+            style="@style/edittext_style1"
             android:layout_height="120dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/backwithborder"
-            android:hint="@string/description_hint"
-            android:inputType="textPassword"
             android:gravity="top"
-            android:padding="8dp"
+            android:hint="@string/description_hint"
             app:layout_constraintTop_toBottomOf="@+id/found_transfer_amount_edtxt"
             tools:layout_editor_absoluteX="0dp" />
 

@@ -5,9 +5,9 @@ data class TransactionResponse(val status : String,
 
 data class TransactionList(val amount : Double,
                            val transactionDate : String,
-                           val receipient : TransactionReceipient)
+                           val receipient : TransactionRecipient)
 
-data class TransactionReceipient(val accountNo : String,
-                                 val accountHolder : String)
+data class TransactionRecipient(val accountNo : String = "",
+                                val accountHolder : String = "")
 
 

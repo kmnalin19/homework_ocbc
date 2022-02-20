@@ -20,9 +20,11 @@ class ThousandSeparatorTextWatcher(private val editText : EditText,
         try {
             if (p0.toString().isNotBlank() && p0.toString().length < 20) {
                 val roundAmount = p0.toString().replace(",", "")
-                if (roundAmount.toDouble() > accountBalance.toDouble()) {
+                if (roundAmount.toDouble() > accountBalance.toDouble())
                     listener.showInputError()
-                }
+                else
+                    listener.showTransferButton()
+
                 editText.removeTextChangedListener(this)
                 var s = roundAmount.split(".")
                 var s1 = ""
@@ -51,5 +53,6 @@ class ThousandSeparatorTextWatcher(private val editText : EditText,
    interface AmountFormatTextWatcherListener{
        fun showInputError()
        fun showInvalidInputError()
+       fun showTransferButton()
    }
 }

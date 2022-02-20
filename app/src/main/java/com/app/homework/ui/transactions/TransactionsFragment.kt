@@ -1,5 +1,7 @@
 package com.app.homework.ui.transactions
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,6 +17,14 @@ import com.app.homework.listners.UiEventInterface
 import com.app.homework.util.FormatUtil
 import com.app.homework.viewModel.TransactionsViewModel
 import java.lang.NumberFormatException
+import android.content.Intent
+
+import androidx.core.content.IntentCompat
+import com.app.homework.LoginActivity
+import com.app.homework.TransactionActivity
+import com.app.homework.const.ApplicationConst
+import kotlin.system.exitProcess
+
 
 class TransactionsFragment : Fragment(), UiEventInterface {
 
@@ -66,7 +76,10 @@ class TransactionsFragment : Fragment(), UiEventInterface {
         val logoutBtn : TextView = view.findViewById(R.id.logout_btn)
         val transferBtn : TextView = view.findViewById(R.id.transfer_btn)
         logoutBtn.setOnClickListener {
-            activity?.finish()
+            transactionsViewModel.setJwtToken("")
+            activity?.let {
+                goToLogin(it)
+            }
         }
         transferBtn.setOnClickListener {
             transactionsViewModel.setTransferFound()
@@ -75,24 +88,30 @@ class TransactionsFragment : Fragment(), UiEventInterface {
     }
 
     override fun initLiveData() {
-        transactionsViewModel.isAccountBalanceSuccess.observe(viewLifecycleOwner , Observer {
-            accountHolderNumberText?.text =  it.accountNo
+        transactionsViewModel.isAccountBalanceSuccess.observe(viewLifecycleOwner, Observer {
+            accountHolderNumberText?.text = it.accountNo
             try {
                 accountBalanceText?.text = FormatUtil.doubleToStringNoDecimal(it.balance.toDouble())
             } catch (e: NumberFormatException) {
                 accountBalanceText?.text = "0.00"
             }
         })
-        transactionsViewModel.isTransactionSuccess.observe(viewLifecycleOwner , Observer {
+        transactionsViewModel.isTransactionSuccess.observe(viewLifecycleOwner, Observer {
             recyclerView.adapter = TransactionListAdapter(it)
         })
-        transactionsViewModel.isError.observe(viewLifecycleOwner , Observer {
+        transactionsViewModel.isError.observe(viewLifecycleOwner, Observer {
             //Toast.makeText(activity,"SomeThing went wrong....", Toast.LENGTH_LONG).show()
             progressBar?.visibility = View.GONE
         })
-        transactionsViewModel.isLoading.observe(viewLifecycleOwner , Observer {
+        transactionsViewModel.isLoading.observe(viewLifecycleOwner, Observer {
             if (it == false)
                 progressBar?.visibility = View.GONE
         })
     }
+        fun goToLogin(activity: Activity) {
+            val i = Intent(context, LoginActivity::class.java)
+            startActivity(i)
+            activity.finish()
+        }
+
 }
