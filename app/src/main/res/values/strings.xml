@@ -15,4 +15,10 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="transfer_title">Transfer</string>
+    <string name="description_hint">description....</string>
+    <string name="amount_hint">Amount</string>
+
+    <string name="amount_insufficient_error">Insufficient balance</string>
+    <string name="amount_validation_error">Please enter valid amount</string>
 </resources>

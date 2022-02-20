@@ -16,6 +16,12 @@ object FormatUtil {
         return "SGD "+ formatter.format(d)
     }
 
+    fun doubleToStringNoDecimal1(d: Double): String {
+        val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
+        formatter.applyPattern("#,###,###.##")
+        return formatter.format(d)
+    }
+
     /**
      * get format display date for section title
      * input 2022-01-23 output 2022 JAN 23

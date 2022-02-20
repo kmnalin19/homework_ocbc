@@ -7,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.app.homework.R
@@ -17,9 +15,6 @@ import com.app.homework.listners.UiEventInterface
 import com.app.homework.util.FormatUtil
 import com.app.homework.viewModel.TransactionsViewModel
 import java.lang.NumberFormatException
-import java.text.DecimalFormat
-import java.text.NumberFormat
-import java.util.*
 
 class TransactionsFragment : Fragment(), UiEventInterface {
 
@@ -33,10 +28,7 @@ class TransactionsFragment : Fragment(), UiEventInterface {
         fun newInstance() = TransactionsFragment()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.transactions_fragment, container, false)
     }
 
@@ -48,8 +40,13 @@ class TransactionsFragment : Fragment(), UiEventInterface {
         getTransactionList()
     }
 
+    override fun onResume() {
+        super.onResume()
+        getAccountBalance()
+    }
+
     private fun getAccountBalance(){
-        transactionsViewModel.getAccountBalance()
+        transactionsViewModel.getAccountDetails()
         progressBar?.visibility = View.VISIBLE
     }
 
@@ -72,7 +69,7 @@ class TransactionsFragment : Fragment(), UiEventInterface {
             activity?.finish()
         }
         transferBtn.setOnClickListener {
-            activity?.finish()
+            transactionsViewModel.setTransferFound()
         }
         accountHolderNameText.text = transactionsViewModel.getAccountHolderName()
     }
@@ -83,6 +80,7 @@ class TransactionsFragment : Fragment(), UiEventInterface {
             try {
                 accountBalanceText?.text = FormatUtil.doubleToStringNoDecimal(it.balance.toDouble())
             } catch (e: NumberFormatException) {
+                accountBalanceText?.text = "0.00"
             }
         })
         transactionsViewModel.isTransactionSuccess.observe(viewLifecycleOwner , Observer {
@@ -90,6 +88,7 @@ class TransactionsFragment : Fragment(), UiEventInterface {
         })
         transactionsViewModel.isError.observe(viewLifecycleOwner , Observer {
             //Toast.makeText(activity,"SomeThing went wrong....", Toast.LENGTH_LONG).show()
+            progressBar?.visibility = View.GONE
         })
         transactionsViewModel.isLoading.observe(viewLifecycleOwner , Observer {
             if (it == false)

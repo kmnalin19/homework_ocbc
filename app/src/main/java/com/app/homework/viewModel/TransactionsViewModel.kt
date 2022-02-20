@@ -1,18 +1,15 @@
 package com.app.homework.viewModel
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.app.homework.domain.ApiService
 import com.app.homework.domain.MainRepository
+import com.app.homework.domain.Response
 import com.app.homework.domain.model.*
 import com.app.homework.ui.model.TransactionRecyclerItem
-import com.app.homework.util.FormatUtil
+import com.app.homework.usecases.AccountBalanceUseCase
+import com.app.homework.usecases.TransferListUseCase
+import com.app.homework.util.FoundTransferUtil
 import kotlinx.coroutines.*
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class TransactionsViewModel : ViewModel() {
 
@@ -20,26 +17,34 @@ class TransactionsViewModel : ViewModel() {
      * keep token in view model, better encrypt and keep in local repo and
      */
     private var jwtToken : String = ""
+        fun getJwtToken() = jwtToken
+
     private var accountHolderName : String = ""
+
+    private var accountBalance : String = ""
+                fun accountBalance() = accountBalance
 
     private val apiService: ApiService = ApiService.getInstance()
     private val mainRepository: MainRepository = MainRepository(apiService)
 
+    private val accountBalanceUseCase = AccountBalanceUseCase(mainRepository)
+    private val transactionsUseCase = TransferListUseCase(mainRepository)
+
+    private val _transferFound : MutableLiveData<Boolean> = MutableLiveData()
+    val transferFound : LiveData<Boolean>
+        get() = _transferFound
 
     /**
      * live data for notify after when Transaction list api success
      */
-    private val _isTransactionSuccess : MutableLiveData<ArrayList<TransactionRecyclerItem>> = MutableLiveData()
-    val isTransactionSuccess : LiveData<ArrayList<TransactionRecyclerItem>>
-        get() = _isTransactionSuccess
-
+    val isTransactionSuccess : LiveData<List<TransactionRecyclerItem>> get() = _isTransactionSuccess
+    private val _isTransactionSuccess = MediatorLiveData<List<TransactionRecyclerItem>>()
 
     /**
      * live data for notify after when Account details list api success
      */
-    private val _isAccountBalanceSuccess : MutableLiveData<BalanceResponseModel> = MutableLiveData()
-    val isAccountBalanceSuccess : LiveData<BalanceResponseModel>
-        get() = _isAccountBalanceSuccess
+    val isAccountBalanceSuccess : LiveData<BalanceResponseModel> get() = _isAccountBalanceSuccess
+    private val _isAccountBalanceSuccess = MediatorLiveData<BalanceResponseModel>()
 
     /**
      * live data for notify when Error and handle in UI Fragment or Activity
@@ -59,20 +64,41 @@ class TransactionsViewModel : ViewModel() {
         onError("Exception handled: ${throwable.localizedMessage}")
     }
 
-    /**
-     * call Transaction list api and handle isSuccessful and error (can move to UseCase from viewmodel if want to extend to clean architecture )
-     */
-    fun getTransactions() {
-        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            val response = mainRepository.getTransactions(jwtToken)
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        _isTransactionSuccess.postValue(getTransactionList(it.data))
+    private val balanceTrigger = MutableLiveData<Unit>()
+    private val balanceEvent  : LiveData<Response<Any?>> = Transformations.switchMap(balanceTrigger){
+        accountBalanceUseCase.executeCase(jwtToken)
+    }
+
+    private val transactionListTrigger = MutableLiveData<Unit>()
+    private val transactionListEvent  : LiveData<Response<Any?>> = Transformations.switchMap(balanceTrigger){
+        transactionsUseCase.executeCase(jwtToken)
+    }
+
+    init {
+        _isAccountBalanceSuccess.addSource(balanceEvent){
+            when(it) {
+                is Response.SuccessResponse ->{
+                    it.response?.let { it1 ->
+                        val balanceResponseModel = it1 as BalanceResponseModel
+                        accountBalance = balanceResponseModel.balance
+                        _isAccountBalanceSuccess.postValue(balanceResponseModel)
                     }
                     _isLoading.postValue(false)
-                } else {
-                    _isError.postValue(response.message())
+                }
+                is Response.ErrorResponse ->{
+                    _isError.postValue(it.error)
+                    _isLoading.postValue(false)
+                }
+            }
+        }
+        _isTransactionSuccess.addSource(transactionListEvent){ it ->
+            when(it) {
+                is Response.SuccessResponse ->{
+                    _isTransactionSuccess.postValue(FoundTransferUtil.getTransactionList((it.response as TransactionResponse).data))
+                    _isLoading.postValue(false)
+                }
+                is Response.ErrorResponse ->{
+                    _isError.postValue(it.error)
                     _isLoading.postValue(false)
                 }
             }
@@ -82,57 +108,26 @@ class TransactionsViewModel : ViewModel() {
     /**
      * call account detail api and handle isSuccessful and error (can move to UseCase from viewmodel if want to extend to clean architecture )
      */
-    fun getAccountBalance() {
-        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            val response = mainRepository.getAccountBalance(jwtToken)
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    _isAccountBalanceSuccess.postValue(response.body())
-                    _isLoading.postValue(false)
-                } else {
-                    _isError.postValue(response.message())
-                    _isLoading.postValue(false)
-                }
-            }
-        }
+    fun getAccountDetails() {
+        balanceTrigger.postValue(Unit)
     }
 
-    /**
-     * prepare TransactionRecyclerItems section list UI model for adapter
-     * group from transaction date
-     */
-    private fun getTransactionList(data : List<TransactionList>) : ArrayList<TransactionRecyclerItem>{
-
-        val transactionList : ArrayList<TransactionRecyclerItem> = arrayListOf()
-        var currentDate = data[0].transactionDate.split("T")[0]
-        var newDate  = currentDate
-        transactionList.add(TransactionRecyclerItem.TransactionRecyclerTitle(FormatUtil.getDisplayDateString(currentDate)))
-        transactionList.add(TransactionRecyclerItem.TransactionRecyclerRow(
-            data[0].receipient.accountHolder,
-            data[0].receipient.accountNo,data[0].amount))
-
-        for (i in 2 until data.size){
-            newDate = data[i].transactionDate.split("T")[0]
-            if (newDate != currentDate) {
-                currentDate = newDate
-                transactionList.add(
-                    TransactionRecyclerItem.TransactionRecyclerTitle(FormatUtil.getDisplayDateString(currentDate)))
-            }
-                transactionList.add(TransactionRecyclerItem.TransactionRecyclerRow(
-                    data[i].receipient.accountHolder,
-                    data[i].receipient.accountNo,data[i].amount))
-
-        }
-        return transactionList
+    fun getTransactions(){
+        transactionListTrigger.postValue(Unit)
     }
 
     private fun onError(message: String) {
         _isError.postValue(message)
     }
 
+    fun setTransferFound(){
+        _transferFound.postValue(true)
+    }
+
     fun setJwtToken(token : String){
         jwtToken = token
     }
+
 
     fun setAccountHolderName(name : String){
         accountHolderName = name
@@ -147,6 +142,8 @@ class TransactionsViewModel : ViewModel() {
         super.onCleared()
         job?.cancel()
         jwtToken = ""
+        accountBalanceUseCase.cancel()
+        transactionsUseCase.cancel()
     }
 
 }

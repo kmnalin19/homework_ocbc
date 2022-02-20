@@ -58,8 +58,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:textColor="@color/black"
-                android:fontFamily="sans-serif-black"
-                android:text="SGD 21,421.33" />
+                android:fontFamily="sans-serif-black" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -74,8 +73,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
                 android:textColor="@color/black"
-                android:fontFamily="sans-serif-black"
-                android:text="3213-321-9923" />
+                android:fontFamily="sans-serif-black" />
 
 
             <TextView
@@ -91,8 +89,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
                 android:textColor="@color/black"
-                android:fontFamily="sans-serif-black"
-                android:text="Donald Trump" />
+                android:fontFamily="sans-serif-black" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/transfer_btn"

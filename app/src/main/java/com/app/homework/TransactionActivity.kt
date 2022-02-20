@@ -2,14 +2,17 @@ package com.app.homework
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.app.homework.const.ApplicationConst
-import com.app.homework.ui.TransferMoneyFragment
+import com.app.homework.listners.UiEventInterface
+import com.app.homework.ui.transfer.TransferFoundFragment
 import com.app.homework.ui.transactions.TransactionsFragment
 import com.app.homework.util.addFragment
 import com.app.homework.viewModel.TransactionsViewModel
 
-class TransactionActivity : AppCompatActivity() {
+class TransactionActivity : AppCompatActivity(),UiEventInterface {
 
     private val transactionsViewModel: TransactionsViewModel by viewModels()
 
@@ -24,7 +27,14 @@ class TransactionActivity : AppCompatActivity() {
             transactionsViewModel.setAccountHolderName(name)
         }
         addFragment(TransactionsFragment.newInstance())
+        initLiveData()
     }
 
-    override fun onBackPressed() {}
+    override fun setUpUi(view: View) {}
+
+    override fun initLiveData() {
+        transactionsViewModel.transferFound.observe(this, Observer {
+            addFragment(TransferFoundFragment.newInstance())
+        })
+    }
 }

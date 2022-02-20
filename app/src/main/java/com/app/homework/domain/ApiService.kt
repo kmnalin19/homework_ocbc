@@ -21,6 +21,13 @@ interface ApiService {
     @GET("transactions")
     suspend fun getTransactions(@Header("Authorization") authorization : String) : Response<TransactionResponse>
 
+    @GET("payees")
+    suspend fun getPayeeList(@Header("Authorization") authorization : String) : Response<PayeeResponseModel>
+
+    @POST("transfer")
+    suspend fun doTransfer(@Header("Authorization") authorization : String,
+                           @Body transferRequestModel : TransferRequestModel) : Response<TransferResponseModel>
+
     companion object {
         var retrofitService: ApiService? = null
         fun getInstance() : ApiService {
