@@ -106,6 +106,11 @@ class TransferFoundFragment : Fragment(), UiEventInterface,ThousandSeparatorText
             if (it == false)
                 progressBar?.visibility = View.GONE
         })
+
+        fundTransferViewModel.isError.observe(viewLifecycleOwner , Observer {
+            Toast.makeText(activity,it,Toast.LENGTH_LONG).show()
+            progressBar?.visibility = View.GONE
+        })
     }
 
     override fun showInputError() {
