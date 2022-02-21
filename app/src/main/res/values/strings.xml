@@ -19,5 +19,5 @@
     <string name="confirm_password_not_match">Confirm Password not match</string>
 
     <string name="amount_insufficient_error">Insufficient balance</string>
-    <string name="amount_validation_error">Please enter valid amount</string>
+    <string name="amount_validation_error">Invalid amount</string>
 </resources>

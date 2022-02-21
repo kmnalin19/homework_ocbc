@@ -115,7 +115,7 @@ class TransferFoundFragment : Fragment(), UiEventInterface,ThousandSeparatorText
 
     override fun showInvalidInputError() {
         registerBtn.disableButton()
-        Toast.makeText(activity,getString(R.string.amount_validation_error),Toast.LENGTH_LONG).show()
+        amountEdtText.error = getString(R.string.amount_validation_error)
         amountEdtText.setText("")
         amountEdtText.hint = "0.00"
     }

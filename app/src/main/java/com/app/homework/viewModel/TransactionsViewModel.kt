@@ -59,11 +59,6 @@ class TransactionsViewModel : ViewModel() {
     val isLoading : LiveData<Boolean>
         get() = _isLoading
 
-    var job: Job? = null
-    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        onError("Exception handled: ${throwable.localizedMessage}")
-    }
-
     private val balanceTrigger = MutableLiveData<Unit>()
     private val balanceEvent  : LiveData<Response<Any?>> = Transformations.switchMap(balanceTrigger){
         accountBalanceUseCase.executeCase(jwtToken)
@@ -140,7 +135,6 @@ class TransactionsViewModel : ViewModel() {
      */
     override fun onCleared() {
         super.onCleared()
-        job?.cancel()
         jwtToken = ""
         accountBalanceUseCase.cancel()
         transactionsUseCase.cancel()

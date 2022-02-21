@@ -75,7 +75,7 @@ class FundTransferViewModel : ViewModel() {
     }
 
     fun setTransferRequestModel(amount : String,description: String){
-        transferRequestModel = TransferRequestModel(payeeModel.accountNumber,amount.toDouble(),description)
+        transferRequestModel = TransferRequestModel(payeeModel.accountNumber,amount.replace(",","").toDouble(),description)
         foundTransferTrigger.postValue(Unit)
     }
 

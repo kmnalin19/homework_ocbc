@@ -22,6 +22,8 @@ class ThousandSeparatorTextWatcher(private val editText : EditText,
                 val roundAmount = p0.toString().replace(",", "")
                 if (roundAmount.toDouble() > accountBalance.toDouble())
                     listener.showInputError()
+                else if(roundAmount.toDouble() == 0.00)
+                    listener.showInvalidInputError()
                 else
                     listener.showTransferButton()
 
