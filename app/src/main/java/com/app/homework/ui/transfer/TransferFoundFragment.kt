@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.app.homework.R
 import com.app.homework.listners.UiEventInterface
+import com.app.homework.ui.custom.AcknowledgementDialog
 import com.app.homework.viewModel.TransactionsViewModel
 
 import com.app.homework.ui.custom.ThousandSeparatorTextWatcher
@@ -99,7 +100,7 @@ class TransferFoundFragment : Fragment(), UiEventInterface,ThousandSeparatorText
         })
         fundTransferViewModel.isFoundTransferSuccess.observe(viewLifecycleOwner, Observer {
             progressBar?.visibility = View.GONE
-            activity?.onBackPressed()
+            AcknowledgementDialog.showDialog(activity,getString(R.string.transaction_success) +it.amount+"to"+it.recipientAccount,true)
         })
 
         fundTransferViewModel.isLoading.observe(viewLifecycleOwner , Observer {
@@ -110,6 +111,7 @@ class TransferFoundFragment : Fragment(), UiEventInterface,ThousandSeparatorText
         fundTransferViewModel.isError.observe(viewLifecycleOwner , Observer {
             Toast.makeText(activity,it,Toast.LENGTH_LONG).show()
             progressBar?.visibility = View.GONE
+            AcknowledgementDialog.showDialog(activity,getString(R.string.transaction_not_success),false)
         })
     }
 

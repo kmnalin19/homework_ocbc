@@ -22,7 +22,9 @@
     <string name="amount_insufficient_error">Insufficient balance</string>
     <string name="amount_validation_error">Invalid amount</string>
 
-    <string name="account_number_title">Account Number</string>
+    <string name="account_number_title">Account Number</string>"Error, Transaction not success"
     <string name="account_holder_title">Account Holder</string>
     <string name="you_have_title">You have</string>
+    <string name="transaction_not_success">Error, Transaction not success</string>
+    <string name="transaction_success">You success fully transfer SGD</string>
 </resources>
