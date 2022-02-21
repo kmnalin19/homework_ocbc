@@ -2,7 +2,6 @@ package com.app.homework.ui.custom
 
 import android.text.Editable
 import android.text.TextWatcher
-import java.lang.NumberFormatException
 import android.widget.EditText
 import com.app.homework.util.FormatUtil
 
@@ -30,7 +29,7 @@ class ThousandSeparatorTextWatcher(private val editText : EditText,
                 editText.removeTextChangedListener(this)
                 var s = roundAmount.split(".")
                 var s1 = ""
-                s1 = FormatUtil.doubleToStringNoDecimal1(s[0].toDouble())
+                s1 = FormatUtil.doubleToStringWithoutCurrency(s[0].toDouble())
                 if (s.size > 1) {
                     if (s[1].length > 2) {
                         s1 = s1 + "." + s[1].substring(0, 2)

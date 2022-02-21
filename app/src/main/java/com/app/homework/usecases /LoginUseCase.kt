@@ -6,15 +6,16 @@ import com.app.homework.domain.Response
 import com.app.homework.domain.model.LoginRequest
 import com.app.homework.domain.model.SignUpRequest
 import com.app.homework.listners.CoroutineListener
+import com.app.homework.util.CoroutineDispatcherProvider
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class LoginUseCase (private val mainRepository: MainRepository) : CoroutineScope,
+class LoginUseCase (private val mainRepository: MainRepository,private val coroutineProvider : CoroutineDispatcherProvider) : CoroutineScope,
     CoroutineListener {
 
     var job: Job? = null
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO
+        get() = coroutineProvider.io
 
     /**
      * call account detail api and handle isSuccessful and error

@@ -5,14 +5,15 @@ import com.app.homework.domain.MainRepository
 import com.app.homework.domain.Response
 import com.app.homework.domain.model.TransferRequestModel
 import com.app.homework.listners.CoroutineListener
+import com.app.homework.util.CoroutineDispatcherProvider
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class TransferListUseCase(private val mainRepository: MainRepository) : CoroutineScope,CoroutineListener {
+class TransferListUseCase(private val mainRepository: MainRepository,private val coroutineProvider : CoroutineDispatcherProvider) : CoroutineScope,CoroutineListener {
 
     var job: Job? = null
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO
+        get() = coroutineProvider.io
 
     fun executeCase(jwtToken : String) : MutableLiveData<Response<Any?>> {
         val data = MutableLiveData<Response<Any?>>()

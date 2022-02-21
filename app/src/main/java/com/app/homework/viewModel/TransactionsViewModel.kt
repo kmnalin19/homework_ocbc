@@ -8,6 +8,7 @@ import com.app.homework.domain.model.*
 import com.app.homework.ui.model.TransactionRecyclerItem
 import com.app.homework.usecases.AccountBalanceUseCase
 import com.app.homework.usecases.TransferListUseCase
+import com.app.homework.util.CoroutineDispatcherProvider
 import com.app.homework.util.FoundTransferUtil
 import kotlinx.coroutines.*
 
@@ -27,8 +28,8 @@ class TransactionsViewModel : ViewModel() {
     private val apiService: ApiService = ApiService.getInstance()
     private val mainRepository: MainRepository = MainRepository(apiService)
 
-    private val accountBalanceUseCase = AccountBalanceUseCase(mainRepository)
-    private val transactionsUseCase = TransferListUseCase(mainRepository)
+    private val accountBalanceUseCase = AccountBalanceUseCase(mainRepository, CoroutineDispatcherProvider())
+    private val transactionsUseCase = TransferListUseCase(mainRepository, CoroutineDispatcherProvider())
 
     private val _transferFound : MutableLiveData<Boolean> = MutableLiveData()
     val transferFound : LiveData<Boolean>

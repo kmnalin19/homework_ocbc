@@ -16,17 +16,20 @@
             android:id="@+id/username_edtxt"
             style="@style/edittext_style1"
             android:hint="@string/user_name"
+            android:inputType="text"
             android:selectAllOnFocus="true"/>
 
         <EditText
             android:id="@+id/password_edtxt"
             style="@style/edittext_style1"
             android:hint="@string/password"
+            android:maxLines="1"
             android:inputType="textPassword" />
 
         <EditText
             android:id="@+id/conform_password_edtxt"
             style="@style/edittext_style1"
+            android:maxLines="1"
             android:hint="@string/conform_password"
             android:inputType="textPassword" />
 

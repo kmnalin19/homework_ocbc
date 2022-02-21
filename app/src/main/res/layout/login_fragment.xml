@@ -15,7 +15,9 @@
         <EditText
             android:id="@+id/username_edtxt"
             style="@style/edittext_style1"
+            android:maxLines="1"
             android:hint="@string/prompt_email"
+            android:inputType="text"
             android:selectAllOnFocus="true"/>
 
     <EditText
@@ -23,6 +25,7 @@
         style="@style/edittext_style1"
         android:hint="@string/prompt_password"
         android:inputType="textPassword"
+        android:maxLines="1"
         android:imeOptions="actionDone"
         android:selectAllOnFocus="true" />
 

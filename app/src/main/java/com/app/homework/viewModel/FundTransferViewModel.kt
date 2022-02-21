@@ -11,14 +11,15 @@ import com.app.homework.ui.model.PayeeUiModel
 import com.app.homework.usecases.FoundTransferUseCase
 import com.app.homework.usecases.TransferListUseCase
 import com.app.homework.usecases.PayeeListUseCase
+import com.app.homework.util.CoroutineDispatcherProvider
 
 class FundTransferViewModel : ViewModel() {
 
     private var jwtToken : String = ""
     private val apiService: ApiService = ApiService.getInstance()
     private val mainRepository: MainRepository = MainRepository(apiService)
-    private val payeeListUseCase = PayeeListUseCase(mainRepository)
-    private val foundTransferUseCase = FoundTransferUseCase(mainRepository)
+    private val payeeListUseCase = PayeeListUseCase(mainRepository, CoroutineDispatcherProvider())
+    private val foundTransferUseCase = FoundTransferUseCase(mainRepository, CoroutineDispatcherProvider())
     private lateinit var transferRequestModel : TransferRequestModel
 
     private lateinit var payeeModel : PayeeUiModel

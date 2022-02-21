@@ -51,6 +51,11 @@ class LoginFragment : Fragment(),UiEventInterface {
         userNameEdtText = view.findViewById(R.id.username_edtxt)
         passwordEdtText = view.findViewById(R.id.password_edtxt)
         progressBar = view.findViewById(R.id.loading)
+        userNameEdtText?.setText("test")
+        passwordEdtText?.setText("asdasd")
+//        userNameEdtText?.setText("nalin1")
+//        passwordEdtText?.setText("nalin123")
+
         userNameEdtText?.addTextChangedListener(textWatcher)
         passwordEdtText?.addTextChangedListener(textWatcher)
 

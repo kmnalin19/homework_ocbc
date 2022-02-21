@@ -7,19 +7,22 @@ import com.app.homework.domain.ApiService
 import com.app.homework.domain.MainRepository
 import com.app.homework.domain.model.LoginRequest
 import com.app.homework.domain.model.LoginResponse
+import com.app.homework.usecases.LoginUseCase
+import com.app.homework.usecases.PayeeListUseCase
+import com.app.homework.util.CoroutineDispatcherProvider
 import kotlinx.coroutines.*
 
 class LoginViewModel() : ViewModel() {
 
     private val apiService: ApiService = ApiService.getInstance()
     private val mainRepository: MainRepository = MainRepository(apiService)
+    private val payeeListUseCase = LoginUseCase(mainRepository, CoroutineDispatcherProvider())
     /**
      * live data for notify after when redirect to Register screen anywhere in the app
      */
     private val _isRegister : MutableLiveData<Boolean> = MutableLiveData()
     val isRegister : LiveData<Boolean>
         get() = _isRegister
-
 
     /**
      * live data for notify after when redirect to Login screen anywhere in the app

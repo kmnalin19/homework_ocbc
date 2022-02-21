@@ -12,11 +12,11 @@ object FormatUtil {
      */
     fun doubleToStringNoDecimal(d: Double): String? {
         val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
-        formatter.applyPattern("#,###.##")
+        formatter.applyPattern("#,###,###.##")
         return "SGD "+ formatter.format(d)
     }
 
-    fun doubleToStringNoDecimal1(d: Double): String {
+    fun doubleToStringWithoutCurrency(d: Double): String {
         val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
         formatter.applyPattern("#,###,###.##")
         return formatter.format(d)
