@@ -100,7 +100,7 @@ class TransferFoundFragment : Fragment(), UiEventInterface,ThousandSeparatorText
         })
         fundTransferViewModel.isFoundTransferSuccess.observe(viewLifecycleOwner, Observer {
             progressBar?.visibility = View.GONE
-            AcknowledgementDialog.showDialog(activity,getString(R.string.transaction_success) +it.amount+"to"+it.recipientAccount,true)
+            AcknowledgementDialog.showDialog(activity,getString(R.string.transaction_success) +it.amount+" to Account "+it.recipientAccount,true)
         })
 
         fundTransferViewModel.isLoading.observe(viewLifecycleOwner , Observer {
