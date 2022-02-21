@@ -5,6 +5,7 @@
     <string name="prompt_password">Password</string>
     <string name="sign_up">REGISTER</string>
     <string name="login">LOGIN</string>
+    <string name="logout">Logout</string>
     <string name="welcome">"Welcome!"</string>
     <string name="user_name">user name</string>
     <string name="password">password</string>
@@ -20,4 +21,8 @@
 
     <string name="amount_insufficient_error">Insufficient balance</string>
     <string name="amount_validation_error">Invalid amount</string>
+
+    <string name="account_number_title">Account Number</string>
+    <string name="account_holder_title">Account Holder</string>
+    <string name="you_have_title">You have</string>
 </resources>

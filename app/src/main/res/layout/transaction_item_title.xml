@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:textSize="14dp"
         android:textColor="@color/color_blue"
-        android:fontFamily="sans-serif-medium"
-        android:text="Donald Trump" />
+        android:fontFamily="sans-serif-medium" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

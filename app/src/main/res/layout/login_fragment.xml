@@ -32,31 +32,22 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/login_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginTop="16dp"
-        android:background="@color/color_blue"
-        android:textColor="@color/white"
+        style="@style/blue_button_style"
         android:enabled="false"
         android:text="@string/login"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/register_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/blue_button_style"
         android:layout_marginTop="8dp"
         android:background="@color/white"
         android:textColor="@color/color_blue"
-        android:layout_gravity="start"
         android:text="@string/sign_up"/>
 
     <ProgressBar
         android:id="@+id/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/progress_style"
         android:layout_gravity="center"
-        android:layout_marginBottom="64dp"
-        android:visibility="gone" />
+        android:layout_marginBottom="64dp" />
     </LinearLayout>
 </LinearLayout>

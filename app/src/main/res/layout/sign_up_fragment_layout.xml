@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
+        android:padding="@dimen/vertical_margin_16"
         android:orientation="vertical">
         <EditText
             android:id="@+id/username_edtxt"
@@ -35,20 +35,12 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/register_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="24dp"
-            android:background="@color/color_blue"
-            android:textColor="@color/white"
+            style="@style/blue_button_style"
             android:text="@string/sign_up"/>
 
         <ProgressBar
             android:id="@+id/loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="64dp"
-            android:visibility="gone" />
+            style="@style/progress_style"
+            android:layout_marginBottom="64dp" />
     </LinearLayout>
 </LinearLayout>
